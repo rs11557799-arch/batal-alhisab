@@ -1,10 +1,10 @@
 // بطل الحساب - service worker
-const CACHE='batal-alhisab-202610101915';
+const CACHE='batal-alhisab-202610102012';
 const FILES=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png','icon-maskable-512.png','apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{
-  const r=e.request;if(r.method!=='GET')return;
+  const r=e.request;if(r.method!=='GET'||/firebaseio\.com|firebasedatabase\.app/.test(r.url))return;
   const same=new URL(r.url).origin===location.origin;
   if(r.mode==='navigate'||(same&&/index\.html$|\/$/.test(new URL(r.url).pathname))){
     // الصفحة: الشبكة أولاً لتصل التحديثات، ثم النسخة المحفوظة عند انقطاع الإنترنت
